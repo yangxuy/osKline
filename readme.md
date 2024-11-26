@@ -7,6 +7,7 @@ ohpm install @yx/klinechart
 ```
 
 页面展示
+
 ![img.png](img.png)
 
 使用方式
