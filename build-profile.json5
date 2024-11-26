@@ -1,0 +1,59 @@
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "storePassword": "000000191CA996ED25FAFA74F452FE69D1C826B2570DCC764F88739D23CFD1E931CFBD7236083D63DE",
+          "certpath": "/Users/yangxu/Desktop/hm/dev.cer",
+          "keyAlias": "dev",
+          "keyPassword": "000000199117FE3D493B0D6D36E94D62FB64E0EFB4EA1995F4D12494D8584034B0C58C54A6E3B86FF1",
+          "profile": "/Users/yangxu/Desktop/hm/devDebug.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/yangxu/Desktop/hm/dev.p12"
+        }
+      }
+    ],
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "compatibleSdkVersion": "5.0.0(12)",
+        "runtimeOS": "HarmonyOS",
+        "buildOption": {
+          "strictMode": {
+            "caseSensitiveCheck": true,
+            "useNormalizedOHMUrl": true
+          }
+        }
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug",
+      },
+      {
+        "name": "release"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "klinechart",
+      "srcPath": "./klinechart",
+    }
+  ]
+}

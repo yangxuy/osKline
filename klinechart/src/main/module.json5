@@ -1,0 +1,9 @@
+{
+  "module": {
+    "name": "klinechart",
+    "type": "har",
+    "deviceTypes": [
+      "default"
+    ]
+  }
+}
