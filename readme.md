@@ -30,7 +30,7 @@ struct Index {
     Column() {
   
       KLineChart({
-        _controller: this._controller
+        controller: this._controller
       })
     }
   }

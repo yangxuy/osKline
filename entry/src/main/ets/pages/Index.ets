@@ -10,12 +10,10 @@ struct Index {
     this._controller.applyNewData(testData)
   }
 
-
   build() {
     Column() {
-
       KLineChart({
-        _controller: this._controller
+        controller: this._controller
       })
     }
   }

@@ -5,13 +5,13 @@ import { ControllerOptions } from '../type/type';
 
 @Component
 export struct KLineChart {
-  private _controller: KLineChartController = new KLineChartController();
+  private controller: KLineChartController = new KLineChartController();
   private _nodeController: Nullable<KLineViewNode>
   private options?: ControllerOptions;
 
   aboutToAppear(): void {
-    this._controller.setOptions(this.options)
-    this._nodeController = new KLineViewNode(this._controller)
+    this.controller.setOptions(this.options)
+    this._nodeController = new KLineViewNode(this.controller)
   }
 
   build() {

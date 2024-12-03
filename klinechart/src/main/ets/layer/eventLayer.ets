@@ -15,7 +15,6 @@ export class EventLayer extends CanvasLayer implements IContainer<CandleNode> {
     super(option)
     this.style = option.style
     this.sceneCanvas.frameNode?.commonEvent.setOnTouch((event) => {
-      console.log("touch event")
       this.onTouch(event)
     })
   }
@@ -54,7 +53,6 @@ export class EventLayer extends CanvasLayer implements IContainer<CandleNode> {
     const x = event.x
     const y = event.y
     const colorKey = this.getIntersection({ x, y })
-    console.log("000", colorKey)
     if (colorKey) {
       const node = this.getChild(colorKey)
       this.drawElementCrossaxis(node as CandleNode)

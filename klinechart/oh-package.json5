@@ -1,6 +1,6 @@
 {
   "name": "@yx/klinechart",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "一个k线组件库，包含基本的k线功能以及MA线，目前包含的手势有滑动，点击",
   "main": "Index.ets",
   "author": "天涯",

@@ -6,7 +6,7 @@
   "author": "",
   "license": "",
   "dependencies": {
-    "@yx/klinechart": "file:../klinechart"
+    "@yx/klinechart": "latest"
   }
 }
 

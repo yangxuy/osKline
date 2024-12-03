@@ -124,6 +124,7 @@ export class KLineChartController {
     } else if (this.kLineList.length + this.rightCandleCount - this.kLineInViewCount < this.precision) {
       this.rightCandleCount = this.kLineInViewCount - this.kLineList.length
     }
+
     this.calculateRangeIndex()
   }
 

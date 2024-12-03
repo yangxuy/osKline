@@ -5,7 +5,7 @@
  *   - candle
  *   - max/min
  * */
-import { FrameNode, NodeController, UIContext } from "@kit.ArkUI";
+import { AnimatorResult, FrameNode, NodeController, UIContext } from "@kit.ArkUI";
 import { BottomLayer } from "../layer/bottomLayer";
 import { EventLayer } from "../layer/eventLayer";
 import { MiddleLayer } from "../layer/middleLayer";
@@ -14,6 +14,7 @@ import { NodeExtention } from "../type/type";
 import { KlineUIContext } from "../util/uiContext";
 import { KLineChartController } from "./KLineChartController";
 import { IndicatorLayer } from '../layer/indicatorLayer'
+import { Animator as animator } from "@kit.ArkUI";
 
 export class KLineViewNode extends NodeController implements NodeExtention {
   _controller: KLineChartController
@@ -31,6 +32,12 @@ export class KLineViewNode extends NodeController implements NodeExtention {
   private _middleNode: Nullable<MiddleLayer>;
   private _bottomNode: Nullable<BottomLayer>;
   private _indicator: Nullable<IndicatorLayer>;
+  private _flingStartTime: number = 0
+  private offsetDistance: number = 0
+  private _scrollX: number = 0
+  private momentumTimeThreshold = 300 // 惯性滑动的启动 时间阈值
+  private momentumStartY = 0 // 惯性滑动的启动 时间阈值
+  private _animation?: AnimatorResult;
 
   get maxPrice() {
     return this._controller.visibleRangeDataMaxAndMin[0].value
@@ -81,21 +88,74 @@ export class KLineViewNode extends NodeController implements NodeExtention {
     const touch = event.touches[0]
     if (event.type == TouchType.Down) {
       this.eventType = 0
+      this._flingStartTime = new Date().getTime()
       this.scrollX = touch.x
+      this._scrollX = touch.x
+      this.offsetDistance = 0
+      this.momentumStartY = 0
     } else if (event.type == TouchType.Up) {
       if (this.eventType == 0) {
         this.eventType = 2
         const node = this._topNode?.getNodeByClick({ x: touch.x, y: touch.y })
         this._indicator?.batchDraw(node)
+      } else if (this.eventType == 1) {
+        const absDeltaY = Math.abs(this.offsetDistance - this.momentumStartY);
+        const duration = new Date().getTime() - this._flingStartTime;
+        if (absDeltaY > 15 && duration < this.momentumTimeThreshold) {
+          this.onAnimation(this.offsetDistance, this.momentumStartY, duration)
+        }
       }
-      this.scrollX = 0
     } else {
       const distance = touch.x - this.scrollX
+      this.offsetDistance = touch.x - this._scrollX
       if (distance != 0) {
         this.eventType = 1
         this.scrollX = touch.x
         this.onScrollX(distance)
+        const now = new Date().getTime();
+        if (now - this._flingStartTime > this.momentumTimeThreshold) {
+          this.momentumStartY = this.offsetDistance;
+          this._flingStartTime = now;
+        }
+      } else {
+        this.eventType = 0
       }
+    }
+  }
+
+  onAnimation(current: number, start: number, duration: number) {
+    const deceleration = 0.003;
+    const distance = current - start;
+    const speed = 2 * Math.abs(distance) / duration;
+    let destination = current + speed / deceleration * (distance < 0 ? -1 : 1);
+
+    this._animation = animator.create({
+      duration: 800,
+      easing: "cubic-bezier(.17, .89, .45, 1)",
+      delay: 0,
+      fill: "forwards",
+      direction: "normal",
+      iterations: 1,
+      begin: 0,
+      end: destination
+    })
+
+    this.scrollX = 0
+    this._animation.onFrame = (progress) => {
+      const distance = progress - this.scrollX
+      if (Math.abs(distance) < 100) {
+        this.onScrollX(distance)
+        this.scrollX = progress
+      }
+    }
+
+    this._animation.play()
+  }
+
+  onAnimationStop() {
+    if (this._animation) {
+      this._animation.cancel()
+      this._animation.finish()
     }
   }
 
